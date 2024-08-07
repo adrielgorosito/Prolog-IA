@@ -1,4 +1,6 @@
 % Ejercicio 5
+% Escriba una regla que permita determinar si una persona (dato entrada)
+% tiene algún auto con deuda. 
 auto(hti687, pedro).
 auto(jug144, juan).
 auto(gqm758, pedro).
