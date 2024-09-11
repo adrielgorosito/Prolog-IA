@@ -1,0 +1,16 @@
+padres(belen, ticiana, quique).
+padres(juanmiguel, ticiana, quique).
+padres(sebastian, ida, beto).
+
+pagar(belen, luz, 5000).
+pagar(belen, gas, 1500).
+pagar(juanmiguel, luz, 7000).
+pagar(juanmiguel, aguas, 3000).
+pagar(juanmiguel, internet, 13000).
+pagar(sebastian, luz, 11000).
+pagar(sebastian, internet, 20000).
+pagar(sebastian, aguas, 4500).
+
+personas(1234, belen).
+personas(1235, juanmiguel).
+personas(1236, sebastian).
