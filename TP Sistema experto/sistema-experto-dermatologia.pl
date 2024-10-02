@@ -3,6 +3,7 @@ enfermedad(acne, cara, granos, [piel_grasa, espinillas, puntos_negros]).
 enfermedad(eczema, cuerpo, picazon, [piel_seca, picazon_intensa, enrojecimiento]).
 enfermedad(psoriasis, cuerpo, manchas, [piel_escamosa, manchas_rojas, piel_gruesa]).
 enfermedad(dermatitis_contacto, manos, picazon, [erupcion, picazon, piel_irritada]).
+enfermedad(rosacea, cara, granos, [enrojecimiento, piel_sensible]).
 
 % Reglas
 preguntar_filtros(Zona, Problema) :-
@@ -13,9 +14,29 @@ preguntar_filtros(Zona, Problema) :-
 
 % Consulta de síntomas
 preguntar_sintomas(Zona, Problema, Lista_sintomas_usuario) :-
-    enfermedad(_, Zona, Problema, Sintomas),
-    preguntar_lista_sintomas(Sintomas, [], Lista_sintomas_usuario).
+    findall(X, enfermedad(_, Zona, Problema, X), Lista_sintomas_enfermedades),
+    desglosar_sintomas(Lista_sintomas_enfermedades, Lista_sintomas_usuario, []).
+	% preguntar_lista_sintomas(Sintomas, [], Lista_sintomas_usuario).
+preguntar_sintomas(_, _, _) :-
+    write('No se encontraron coincidencias de enfermedades con la zona y problema indicados.'),
+    nl,
+    write('Consulte con su dermatólogo de confianza.'), nl,
+    fail.
 
+desglosar_sintomas([], Lista_sintomas_usuario, Lista_acumulada) :-
+    write(Lista_acumulada), nl,
+    Lista_sintomas_usuario = Lista_acumulada.
+
+desglosar_sintomas([H|T], Lista_sintomas_usuario, Lista_acumulada) :-
+    preguntar_lista_sintomas(H, [], Sintomas),
+    agregar_sintomas(Sintomas, Lista_acumulada, Nueva_lista_acumulada),
+    desglosar_sintomas(T, Lista_sintomas_usuario, Nueva_lista_acumulada).
+
+agregar_sintomas([], Lista, Lista).
+agregar_sintomas([S|Resto], Lista, [S|Lista_Nueva]) :-
+    agregar_sintomas(Resto, Lista, Lista_Nueva).
+
+% Consulta de síntomas
 preguntar_lista_sintomas([], Lista, Lista).
 preguntar_lista_sintomas([Sintoma|Resto], Lista_temp, Lista_final) :- 
     consultar_sintoma(Sintoma, Lista_temp, Nueva_lista), 
@@ -63,10 +84,10 @@ inicio :-
     write('Bienvenido al sistema de diagnóstico dermatológico.'), nl,
     preguntar_filtros(Zona, Problema),
     preguntar_sintomas(Zona, Problema, Lista_sintomas_usuario),
-    reverse(Lista_sintomas_usuario, Lista_final), 
+    reverse(Lista_sintomas_usuario, Lista_final),
     diagnosticar(Zona, Problema, Lista_final).
 
 
 % ToDo:
-% 1. Si no coincide ninguna zona ni problema principal, informar que no tiene ninguna enfermedad
-% 2. Modificar la lógica de buscar_sintomas y lo que sigue para dos o mas enfermedades.
+% 1. Modificar la lógica de buscar_sintomas y lo que sigue para dos o mas enfermedades.
+% 2. Ver el tema de si se repiten los síntomas para dos enfermedades.
