@@ -37,27 +37,30 @@ procesar_respuesta(Sintoma, si, Lista_temp, [Sintoma|Lista_temp]).
 procesar_respuesta(_, no, Lista_temp, Lista_temp).
 
 % Diagnóstico
-diagnosticar(Zona, Problema, Lista_final) :-
+diagnosticar(Zona, Problema, Lista_final, Enfermedades_posibles) :-
     findall(X, enfermedad(X, Zona, Problema, _), Enfermedades),
     Enfermedades \= [],
-    proceso_diagnostico(Enfermedades, Lista_final).
-diagnosticar(Zona, Problema, _) :-
-    findall(X, enfermedad(X, Zona, Problema, _), Enfermedades),
-    Enfermedades = [],
-    write('No se encontró ninguna enfermedad que coincida con los síntomas proporcionados.'), nl.
+    proceso_diagnostico(Enfermedades, Lista_final, [], Enfermedades_posibles).
 
-proceso_diagnostico([], _) :-
-    write('No se pudo realizar un diagnóstico preciso.'), nl.
+diagnosticar(_, _, _, _).
 
-proceso_diagnostico([H|T], Lista_final) :-
+proceso_diagnostico([], _, Enfermedades_acc, Enfermedades_acc).
+
+proceso_diagnostico([H|T], Lista_final, Enfermedades_acc, Enfermedades_posibles) :-
     buscar_sintomas(H, Lista_sintomas_enfermedad),
     contar(Lista_sintomas_enfermedad, Cant_sintomas_enfermedad),
-    write("CANT SÍNTOMAS ENF: "), write(Cant_sintomas_enfermedad), nl, nl,
     filtrar_sintomas(Lista_final, Lista_sintomas_enfermedad, Lista_nueva),
     contar(Lista_nueva, Cant_sintomas_usuario),
-    write("CANT SÍNTOMAS USU: "), write(Cant_sintomas_usuario), nl, nl,
-    diagnostico_final(H, Cant_sintomas_enfermedad, Cant_sintomas_usuario),
-    proceso_diagnostico(T, Lista_final).
+    diagnostico_final(H, Cant_sintomas_enfermedad, Cant_sintomas_usuario, Enfermedades_acc, Nuevas_enfermedades_acc),
+    proceso_diagnostico(T, Lista_final, Nuevas_enfermedades_acc, Enfermedades_posibles).
+
+% Filtra las enfermedades que cumplan con los criterios y las agrega a la lista de enfermedades posibles
+diagnostico_final(Enfermedad, Cant_sintomas_enfermedad, Cant_sintomas_usuario, Enfermedades_acc, [Enfermedad|Enfermedades_acc]) :-
+    X is Cant_sintomas_enfermedad / 2,
+    Y is Cant_sintomas_usuario - X,
+    Y >= 0. % Si pasa esta condición, agrega la enfermedad a la lista
+
+diagnostico_final(_, _, _, Enfermedades_acc, Enfermedades_acc).
 
 buscar_sintomas(Enfermedad, Lista_sintomas) :- 
     enfermedad(Enfermedad, _, _, Lista_sintomas).
@@ -75,19 +78,19 @@ filtrar_sintomas([_|T], Lista_sintomas_enfermedad, Lista_nueva) :-
 pertenece(X, [X|_]). 
 pertenece(X, [_|T]) :- pertenece(X, T).
 
-% Lógica para el diagnóstico final
-diagnostico_final(Enfermedad, Cant_sintomas_enfermedad, Cant_sintomas_usuario) :-
-    X is Cant_sintomas_enfermedad / 2,
-    Y is Cant_sintomas_usuario - X,
-    Y >= 0, 
-    write('Usted puede llegar a tener: '), write(Enfermedad), nl,
-    write('Consulte con su dermatólogo de confianza.'), nl.
+% Resultados finales
+resultados([]) :-
+    write('No se encontró ninguna enfermedad que coincida con los síntomas proporcionados.'), nl.
+resultados(Enfermedades_posibles) :-
+    Enfermedades_posibles \= [], 
+    write('Usted puede llegar a tener las siguientes enfermedades:'), nl,
+    imprimir_enfermedades(Enfermedades_posibles),
+    write('Consulte con su dermatólogo de confianza').
 
-diagnostico_final(_, Cant_sintomas_enfermedad, Cant_sintomas_usuario) :-
-    X is Cant_sintomas_enfermedad / 2,
-    Y is Cant_sintomas_usuario - X,
-    Y < 0, 
-    write('Sus síntomas no coinciden con ninguna enfermedad. De todas formas, consulte con su dermatólogo de confianza.'), nl.
+imprimir_enfermedades([]).
+imprimir_enfermedades([H|T]) :-
+    write('- '), write(H), nl,
+    imprimir_enfermedades(T).
 
 % Interfaz de usuario
 inicio :-
@@ -95,9 +98,8 @@ inicio :-
     preguntar_filtros(Zona, Problema),
     preguntar_sintomas(Zona, Problema, Lista_sintomas_usuario),
     reverse(Lista_sintomas_usuario, Lista_final),
-    diagnosticar(Zona, Problema, Lista_final).
-
+    diagnosticar(Zona, Problema, Lista_final, Enfermedades_posibles),
+    resultados(Enfermedades_posibles).
 
 % ToDo:
-% 1. Ver impresión de enfermedades
-% 2. Ver si dos o mas enfermedades tienen uno o mas sintomas
+% 1. Ver si dos o mas enfermedades con la misma zona y problema tienen uno o mas sintomas compartidos
