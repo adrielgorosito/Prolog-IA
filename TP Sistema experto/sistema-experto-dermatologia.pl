@@ -1,32 +1,46 @@
 % Base de conocimientos: Síntomas y enfermedades con zonas y tipos de problemas
 enfermedad(acne, cara, granos, [piel_grasa, espinillas, puntos_negros]).
-enfermedad(eczema, cuerpo, picazon, [piel_seca, picazon_intensa, enrojecimiento]).
+enfermedad(eczema, cuerpo, sarpullido, [piel_seca, picazon_intensa, enrojecimiento]).
 enfermedad(psoriasis, cuerpo, manchas, [piel_escamosa, manchas_rojas, piel_gruesa]).
-enfermedad(dermatitis_contacto, manos, picazon, [erupcion, picazon, piel_irritada]).
+enfermedad(dermatitis_contacto, manos, sarpullido, [erupcion, picazon, piel_irritada]).
 enfermedad(rosacea, cara, granos, [enrojecimiento, piel_sensible]).
+enfermedad(herpes_simple, labios, ampollas, [dolor, picazon, inflamacion]).
+enfermedad(tinea, pies, granos, [erupcion, escamas, enrojecimiento]).
+enfermedad(urticaria, cuerpo, ronchas, [picazon, enrojecimiento, inflamacion]).
+enfermedad(vitiligo, piel, manchas, [pérdida_de_color, piel_sensible]).
+enfermedad(sudamina, cuerpo, granos, [picazon, erupcion, piel_humedecida]).
+enfermedad(alergia_alimentaria, cuerpo, ronchas, [hinchazon, picazon, malestar_digestivo]).
+enfermedad(dermatitis_atopica, cuerpo, ronchas, [picazon, piel_seca, enrojecimiento]).
 
 % Reglas
 preguntar_filtros(Zona, Problema) :-
-    write('¿En qué zona de la piel nota más problemas? (cara/cuerpo/manos): '),
+    write('¿En qué zona de la piel nota más problemas? (cara/cuerpo/piel/manos/labios/pies): '),
     read(Zona),
-    write('¿Cuál es el principal problema que nota? (granos/picazon/manchas): '),
+    write('¿Cuál es el principal problema que nota? (granos/sarpullido/manchas/ampollas/ronchas): '),
     read(Problema).
 
 % Consulta de síntomas
 preguntar_sintomas(Zona, Problema, Lista_sintomas_usuario) :-
     findall(X, enfermedad(_, Zona, Problema, X), Lista_sintomas_enfermedades),
-    desglosar_sintomas(Lista_sintomas_enfermedades, [], Lista_sintomas_usuario).
+    write(Lista_sintomas_enfermedades), nl,
+    desglosar_sintomas(Lista_sintomas_enfermedades, [], Lista_sintomas_usuario, []).
 
-desglosar_sintomas([], Lista_sintomas_usuario, Lista_sintomas_usuario).
+desglosar_sintomas([], Lista_sintomas_usuario, Lista_sintomas_usuario, _).
 
-desglosar_sintomas([H|T], Lista_temp, Lista_sintomas_usuario) :-
-    preguntar_lista_sintomas(H, Lista_temp, Nueva_lista),
-    desglosar_sintomas(T, Nueva_lista, Lista_sintomas_usuario).
+desglosar_sintomas([H|T], Lista_temp, Lista_sintomas_usuario, Lista_sintomas_consultados) :-
+    preguntar_lista_sintomas(H, Lista_temp, Nueva_lista, Lista_sintomas_consultados, Nuevos_sintomas_consultados),
+    desglosar_sintomas(T, Nueva_lista, Lista_sintomas_usuario, Nuevos_sintomas_consultados).
 
-preguntar_lista_sintomas([], Lista, Lista).
-preguntar_lista_sintomas([Sintoma|Resto], Lista_temp, Lista_final) :- 
-    consultar_sintoma(Sintoma, Lista_temp, Nueva_lista), 
-    preguntar_lista_sintomas(Resto, Nueva_lista, Lista_final).
+preguntar_lista_sintomas([], Lista, Lista, Lista_sintomas_consultados, Lista_sintomas_consultados).
+
+preguntar_lista_sintomas([Sintoma|Resto], Lista_temp, Lista_final, Lista_sintomas_consultados, Lista_sintomas_actualizada) :- 
+    write('Lista sintomas consultados: '), write(Lista_sintomas_consultados), nl,
+    \+ pertenece(Sintoma, Lista_sintomas_consultados),
+    consultar_sintoma(Sintoma, Lista_temp, Nueva_lista),
+    preguntar_lista_sintomas(Resto, Nueva_lista, Lista_final, [Sintoma|Lista_sintomas_consultados], Lista_sintomas_actualizada).
+
+preguntar_lista_sintomas([_|Resto], Lista_temp, Lista_final, Lista_sintomas_consultados, Lista_sintomas_actualizada) :- 
+    preguntar_lista_sintomas(Resto, Lista_temp, Lista_final, Lista_sintomas_consultados, Lista_sintomas_actualizada).
 
 consultar_sintoma(Sintoma, Lista_temp, Lista) :-
     write('¿Tiene usted '), write(Sintoma), write('? (si/no): '),
@@ -40,11 +54,11 @@ procesar_respuesta(_, no, Lista_temp, Lista_temp).
 diagnosticar(Zona, Problema, Lista_final, Enfermedades_posibles) :-
     findall(X, enfermedad(X, Zona, Problema, _), Enfermedades),
     Enfermedades \= [],
-    proceso_diagnostico(Enfermedades, Lista_final, [], Enfermedades_posibles).
+    proceso_diagnostico(Enfermedades, Lista_final, [], Enfermedades_posibles), !.
 
 diagnosticar(_, _, _, _).
 
-proceso_diagnostico([], _, Enfermedades_acc, Enfermedades_acc).
+proceso_diagnostico([], _, Enfermedades_acc, Enfermedades_acc) :- !.
 
 proceso_diagnostico([H|T], Lista_final, Enfermedades_acc, Enfermedades_posibles) :-
     buscar_sintomas(H, Lista_sintomas_enfermedad),
@@ -80,7 +94,7 @@ pertenece(X, [_|T]) :- pertenece(X, T).
 
 % Resultados finales
 resultados([]) :-
-    write('No se encontró ninguna enfermedad que coincida con los síntomas proporcionados.'), nl.
+    write('No se encontró ninguna enfermedad que coincida con los síntomas proporcionados.'), nl, !.
 resultados(Enfermedades_posibles) :-
     Enfermedades_posibles \= [], 
     write('Usted puede llegar a tener las siguientes enfermedades:'), nl,
@@ -99,7 +113,4 @@ inicio :-
     preguntar_sintomas(Zona, Problema, Lista_sintomas_usuario),
     reverse(Lista_sintomas_usuario, Lista_final),
     diagnosticar(Zona, Problema, Lista_final, Enfermedades_posibles),
-    resultados(Enfermedades_posibles).
-
-% ToDo:
-% 1. Ver si dos o mas enfermedades con la misma zona y problema tienen uno o mas sintomas compartidos
+    resultados(Enfermedades_posibles), !.
