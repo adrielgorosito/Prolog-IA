@@ -1,0 +1,13 @@
+% Base de conocimientos: Síntomas y enfermedades con zonas y tipos de problemas
+enfermedad(acne, cara, granos, [piel_grasa, espinillas, puntos_negros]).
+enfermedad(eczema, cuerpo, sarpullido, [piel_seca, picazon_intensa, enrojecimiento]).
+enfermedad(psoriasis, cuerpo, manchas, [piel_escamosa, manchas_rojas, piel_gruesa]).
+enfermedad(dermatitis_contacto, manos, sarpullido, [erupcion, picazon, piel_irritada]).
+enfermedad(rosacea, cara, granos, [enrojecimiento, piel_sensible]).
+enfermedad(herpes_simple, labios, ampollas, [dolor, picazon, inflamacion]).
+enfermedad(tinea, pies, granos, [erupcion, escamas, enrojecimiento]).
+enfermedad(urticaria, cuerpo, ronchas, [picazon, enrojecimiento, inflamacion]).
+enfermedad(vitiligo, piel, manchas, [pérdida_de_color, piel_sensible]).
+enfermedad(sudamina, cuerpo, granos, [picazon, erupcion, piel_humedecida]).
+enfermedad(alergia_alimentaria, cuerpo, ronchas, [hinchazon, picazon, malestar_digestivo]).
+enfermedad(dermatitis_atopica, cuerpo, ronchas, [picazon, piel_seca, enrojecimiento]).

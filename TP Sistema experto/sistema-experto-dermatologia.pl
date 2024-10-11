@@ -1,18 +1,11 @@
-% Base de conocimientos: Síntomas y enfermedades con zonas y tipos de problemas
-enfermedad(acne, cara, granos, [piel_grasa, espinillas, puntos_negros]).
-enfermedad(eczema, cuerpo, sarpullido, [piel_seca, picazon_intensa, enrojecimiento]).
-enfermedad(psoriasis, cuerpo, manchas, [piel_escamosa, manchas_rojas, piel_gruesa]).
-enfermedad(dermatitis_contacto, manos, sarpullido, [erupcion, picazon, piel_irritada]).
-enfermedad(rosacea, cara, granos, [enrojecimiento, piel_sensible]).
-enfermedad(herpes_simple, labios, ampollas, [dolor, picazon, inflamacion]).
-enfermedad(tinea, pies, granos, [erupcion, escamas, enrojecimiento]).
-enfermedad(urticaria, cuerpo, ronchas, [picazon, enrojecimiento, inflamacion]).
-enfermedad(vitiligo, piel, manchas, [pérdida_de_color, piel_sensible]).
-enfermedad(sudamina, cuerpo, granos, [picazon, erupcion, piel_humedecida]).
-enfermedad(alergia_alimentaria, cuerpo, ronchas, [hinchazon, picazon, malestar_digestivo]).
-enfermedad(dermatitis_atopica, cuerpo, ronchas, [picazon, piel_seca, enrojecimiento]).
-
 % Reglas
+preguntar_nombre(Nombre) :-
+    write('Por favor, ingrese su nombre: '),
+    read_line_to_string(user_input, Nombre),
+    write('\n¡Hola '), write(Nombre), write('! Soy DermAI, tu asistente virtual dermatológico.\n'),
+    write('Te ayudaré a identificar posibles condiciones dermatológicas basadas en tus síntomas.\n'),
+    write('Recuerda que esto es solo una guía inicial y no reemplaza la consulta médica profesional.\n\n').
+
 preguntar_filtros(Zona, Problema) :-
     write('¿En qué zona de la piel nota más problemas? (cara/cuerpo/piel/manos/labios/pies): '),
     read(Zona),
@@ -22,7 +15,6 @@ preguntar_filtros(Zona, Problema) :-
 % Consulta de síntomas
 preguntar_sintomas(Zona, Problema, Lista_sintomas_usuario) :-
     findall(X, enfermedad(_, Zona, Problema, X), Lista_sintomas_enfermedades),
-    write(Lista_sintomas_enfermedades), nl,
     desglosar_sintomas(Lista_sintomas_enfermedades, [], Lista_sintomas_usuario, []).
 
 desglosar_sintomas([], Lista_sintomas_usuario, Lista_sintomas_usuario, _).
@@ -34,7 +26,6 @@ desglosar_sintomas([H|T], Lista_temp, Lista_sintomas_usuario, Lista_sintomas_con
 preguntar_lista_sintomas([], Lista, Lista, Lista_sintomas_consultados, Lista_sintomas_consultados).
 
 preguntar_lista_sintomas([Sintoma|Resto], Lista_temp, Lista_final, Lista_sintomas_consultados, Lista_sintomas_actualizada) :- 
-    write('Lista sintomas consultados: '), write(Lista_sintomas_consultados), nl,
     \+ pertenece(Sintoma, Lista_sintomas_consultados),
     consultar_sintoma(Sintoma, Lista_temp, Nueva_lista),
     preguntar_lista_sintomas(Resto, Nueva_lista, Lista_final, [Sintoma|Lista_sintomas_consultados], Lista_sintomas_actualizada).
@@ -97,9 +88,9 @@ resultados([]) :-
     write('No se encontró ninguna enfermedad que coincida con los síntomas proporcionados.'), nl, !.
 resultados(Enfermedades_posibles) :-
     Enfermedades_posibles \= [], 
-    write('Usted puede llegar a tener las siguientes enfermedades:'), nl,
+    nl, write('Usted puede llegar a tener las siguientes enfermedades:'), nl,
     imprimir_enfermedades(Enfermedades_posibles),
-    write('Consulte con su dermatólogo de confianza').
+    write('Consulte con su dermatólogo de confianza.'), nl.
 
 imprimir_enfermedades([]).
 imprimir_enfermedades([H|T]) :-
@@ -108,9 +99,12 @@ imprimir_enfermedades([H|T]) :-
 
 % Interfaz de usuario
 inicio :-
+    consult("./enfermedades.txt"),
     write('Bienvenido al sistema de diagnóstico dermatológico.'), nl,
+    preguntar_nombre(Nombre),
     preguntar_filtros(Zona, Problema),
     preguntar_sintomas(Zona, Problema, Lista_sintomas_usuario),
     reverse(Lista_sintomas_usuario, Lista_final),
     diagnosticar(Zona, Problema, Lista_final, Enfermedades_posibles),
-    resultados(Enfermedades_posibles), !.
+    resultados(Enfermedades_posibles), 
+    nl, write('Gracias por usar DermAI, '), write(Nombre), write('!'), nl, halt.
