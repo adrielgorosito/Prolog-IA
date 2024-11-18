@@ -1,0 +1,16 @@
+persona(12345678, 'Juan Perez', 35).
+persona(87654321, 'Maria Gomez', 29).
+persona(11223344, 'Carlos Lopez', 40).
+persona(33445566, 'Ana Torres', 22).
+
+% auto_vendido(Patente, CodModelo, Fecha, Precio, [DNITitulares]).
+auto_vendido('AB123CD', 101, '2023-01-15', 25000, [12345678, 87654321]).
+auto_vendido('AB123CD-2', 101, '2023-01-16', 15000, [12345678]).
+auto_vendido('CD456EF', 102, '2023-03-10', 20000, [11223344]).
+auto_vendido('GH789IJ', 103, '2024-02-20', 25000, [33445566, 12345678]).
+
+% auto(CodModelo, Modelo).
+auto(101, 'Toyota Corolla').
+auto(102, 'Ford Fiesta').
+auto(103, 'Honda Civic').
+auto(104, 'Volkswagen Golf').
