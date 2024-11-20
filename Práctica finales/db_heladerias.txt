@@ -1,0 +1,12 @@
+% Base de hechos para heladerías
+heladeria(1, 'grido', '0341-1234567').
+heladeria(2, 'freddo', '0341-7654321').
+heladeria(3, 'america', '0341-9876543').
+
+% Base de hechos para locales con zonas y direcciones
+locales(1, 'norte', ['alvarez Condarco 4500']).
+locales(1, 'centro', ['pellegrini 1333', 'córdoba 1550']).
+locales(2, 'centro', ['san Martín 1050']).
+locales(2, 'sur', ['ayolas 2000']).
+locales(3, 'oeste', ['av. Provincias Unidas 3333', 'pellegrini 888']).
+%locales(3, 'centro', ['pte. Roca 999']).
