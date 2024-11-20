@@ -1,0 +1,13 @@
+paciente(123, 'Juan', 'OSDE').
+paciente(456, 'María', 'Swiss Medical').
+paciente(789, 'Carlos', 'Galeno').
+
+profesional(111, 'Dr. Martinez', 'Cardiología', 'OSDE').
+profesional(222, 'Dra. Pérez', 'Dermatología', 'Swiss Medical').
+profesional(333, 'Dr. López', 'Pediatría', 'Galeno').
+
+turno(123, 111, 'Cardiología', '2024-01-01', 'OSDE', 1500).
+turno(456, 222, 'Dermatología', '2024-02-15', 'Swiss Medical', 1800).
+turno(789, 333, 'Pediatría', '2024-03-20', 'Galeno', 1200).
+turno(123, 111, 'Cardiología', '2024-04-10', 'OSDE', 1600).
+turno(123, 222, 'Dermatología', '2024-04-10', 'OSDE', 1600).
