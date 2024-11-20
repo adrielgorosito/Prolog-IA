@@ -1,0 +1,45 @@
+% Base de datos de artistas
+artista(1, 'Taylor Swift', 'Pop').
+artista(2, 'Ed Sheeran', 'Pop').
+artista(3, 'Beyonce', 'R&B').
+artista(4, 'The Weeknd', 'R&B').
+artista(5, 'Bad Bunny', 'Reggaeton').
+artista(6, 'Dua Lipa', 'Pop').
+artista(7, 'Drake', 'Hip-Hop').
+
+% Base de datos de canciones
+cancion(1, 1, '10/03/2023', 'Midnights Album').
+cancion(2, 2, '15/07/2022', 'Equals Album').
+cancion(3, 3, '20/11/2021', 'Renaissance Album').
+cancion(4, 1, '05/06/2022', 'Red (Taylor\'s Version)').
+cancion(5, 4, '10/01/2020', 'After Hours').
+cancion(6, 5, '20/08/2021', 'El Último Tour del Mundo').
+cancion(7, 6, '02/11/2022', 'Future Nostalgia').
+cancion(8, 7, '22/09/2023', 'For All the Dogs').
+cancion(9, 5, '15/03/2023', 'Un Verano Sin Ti').
+cancion(10, 2, '01/01/2021', 'Divide').
+cancion(11, 6, '12/07/2020', 'Don\'t Start Now').
+cancion(12, 4, '30/10/2019', 'Blinding Lights').
+cancion(13, 7, '28/06/2021', 'Certified Lover Boy').
+cancion(14, 3, '08/03/2023', 'Break My Soul').
+
+% Base de datos de usuarios
+usuario(1, 'Alice', 'Premium', [1, 2, 3, 5, 7]).
+usuario(2, 'Bob', 'Free', [3, 4, 6, 8]).
+usuario(3, 'Charlie', 'Premium', [2, 3, 9, 10]).
+usuario(4, 'Diana', 'Free', [1, 4, 11, 12]).
+usuario(5, 'Eve', 'Premium', [6, 7, 8, 9, 13]).
+
+% Base de datos de listas de reproducción
+listaReproduccion(1, 1, 'Favoritos', [1, 2, 3, 5]).
+listaReproduccion(2, 2, 'Workout', [2, 4, 7]).
+listaReproduccion(3, 2, 'Relax', [3, 6, 8]).
+listaReproduccion(4, 2, 'Party', [4, 8, 12]).
+listaReproduccion(5, 3, 'Hits', [2, 3, 9]).
+listaReproduccion(6, 3, 'Chill', [10, 11]).
+listaReproduccion(7, 4, 'Morning Vibes', [1, 12, 14]).
+listaReproduccion(8, 4, 'Classics', [4, 5, 11]).
+listaReproduccion(9, 5, 'Latino Hits', [6, 9, 13]).
+listaReproduccion(10, 5, 'Top Tracks', [7, 8]).
+listaReproduccion(11, 5, 'Workout', [2, 4, 7, 8, 9]).
+listaReproduccion(12, 5, 'Relax', [3]).
