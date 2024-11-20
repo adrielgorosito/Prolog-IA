@@ -1,0 +1,5 @@
+comision(1, 'Ingeniería', 'Mañana', [101, 102, 103, 104, 105], [7, 5, 6, 8, 3]).
+comision(2, 'Medicina', 'Tarde', [201, 202, 203, 204], [4, 6, 7, 5]).
+comision(3, 'Arquitectura', 'Noche', [301, 302, 303, 304, 305, 306], [9, 8, 7, 6, 5, 4]).
+comision(4, 'Derecho', 'Mañana', [401, 402, 403, 404], [6, 5, 7, 8]).
+comision(5, 'Informática', 'Tarde', [501, 502, 503], [4, 6, 7]).
